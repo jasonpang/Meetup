@@ -73,16 +73,25 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="LinqQueryBenchmarks.cs">
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestAddMockDatabaseData.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestLinqQueryPerformance.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TimeStampTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Splash\Splash.csproj">
       <Project>{ad8395e6-3022-423b-8a44-31f863a3c00c}</Project>
       <Name>Splash</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestLineQueryPerformance.orderedtest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

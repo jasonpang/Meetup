@@ -9,7 +9,7 @@ using Splash.Extensions;
 namespace SplashTests
 {
     [TestClass]
-    public class SplashDatabaseTests
+    public class TestAddMockDatabaseData
     {
         [TestMethod]
         public void TestAddMockData()
@@ -71,6 +71,25 @@ namespace SplashTests
                 User = jason,
             };
 
+            // Add a bunch of mock locations
+
+            var locations = new List<Location>();
+
+            var timeStampNow = DateTime.Now.ToTimestamp();
+            var latitudeNow = 30.000m;
+            var longitudeNow = 60.000m;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                locations.Add(new Location()
+                {
+                    Timestamp = ++timeStampNow,
+                    Latitude = latitudeNow += 0.15m,
+                    Longitude = longitudeNow += 0.15m,
+                    User = jason,
+                });
+            }
+
             jason.Locations.Add(jasonsCollege);
             jason.Locations.Add(sebastiansCollege);
             jason.Locations.Add(geraldsCollege);
@@ -79,14 +98,16 @@ namespace SplashTests
                 {
                     Friender = jason,
                     Friendee = sebastian,
-                    FrienderPermissions = FrienderPermissions.CanFollowFriendee,
+                    FriendRequestStatus = FriendRequestStatus.Pending,
+                    FollowRequestStatus = FollowRequestStatus.Uninitiated,
                 });
 
             jason.Friends.Add(new Friend()
                 {
                     Friender = jason,
                     Friendee = gerald,
-                    FrienderPermissions = FrienderPermissions.None,
+                    FriendRequestStatus = FriendRequestStatus.Pending,
+                    FollowRequestStatus = FollowRequestStatus.Uninitiated,
                 });
 
             using (var session = NHibernateHelper.OpenSession())
@@ -105,11 +126,7 @@ namespace SplashTests
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    // No cascade effect
-                    //session.Delete(sebastiansCollege);
-
-                    // Yes cascade effect
-                    //session.Delete(jason);
+                    locations.ForEach(location => session.Save(location));
 
                     transaction.Commit();
                 }

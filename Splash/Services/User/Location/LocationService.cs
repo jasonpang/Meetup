@@ -69,7 +69,7 @@ namespace Splash.Services.User.Location
 
                     if (request.Last.HasValue)
                     {
-                        return locations.LastN(request.Last.Value);
+                        return locations.TakeLastN(request.Last.Value);
                     }
                     else
                     {

@@ -22,5 +22,10 @@ namespace Splash.Model.Entities
             Latitude = default(decimal);
             Longitude = default(decimal);
         }
+
+        public override string ToString()
+        {
+            return String.Format("{{ Timestamp={0}, Latitude={1}, Longitude={2} }}", Timestamp, Latitude, Longitude);
+        }
     }
 }

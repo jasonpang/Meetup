@@ -7,9 +7,13 @@ namespace Splash.Extensions
 {
     public static class IEnumerableExtensions
     {
-        public static IEnumerable<T> LastN<T>(this IEnumerable<T> collection, int n)
+        public static IEnumerable<T> TakeLastN<T>(this IEnumerable<T> source, int n)
         {
-            return collection.Skip(Math.Max(0, collection.Count() - n)).Take(n); ;
+            if (source == null)
+                throw new ArgumentNullException("Source cannot be null");
+
+            int goldenIndex = source.Count() - n;
+            return source.SkipWhile((val, index) => index < goldenIndex);
         }
     }
 }

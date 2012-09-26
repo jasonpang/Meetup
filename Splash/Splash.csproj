@@ -152,6 +152,7 @@
     <Compile Include="Services\User\Follower\RemoveFollowerService.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\User\Friend\FrienderService.cs" />
     <Compile Include="Services\User\Location\LocationService.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -170,7 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repository\" />
-    <Folder Include="Services\User\Friend\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
