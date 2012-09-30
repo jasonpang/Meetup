@@ -24,7 +24,9 @@ namespace Splash
 
     public class Global : System.Web.HttpApplication
     {
-        public class SplashAppHost : AppHostBase
+        
+
+        public class SplashAppHost : AppHostBase    
         {
             public SplashAppHost() :
                 base("Splash", typeof(UserService).Assembly)
@@ -39,7 +41,7 @@ namespace Splash
                 {
                     DefaultContentType = ContentType.Json,
                     DebugMode = true,
-                    EnableFeatures = Feature.All
+                    EnableFeatures = Feature.All,
                 });
 
                 // container.RegisterValidators(typeof(CreateUserValidator).Assembly);

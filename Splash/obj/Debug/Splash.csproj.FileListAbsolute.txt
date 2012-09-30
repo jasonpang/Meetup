@@ -29,5 +29,6 @@ C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.Redis.xml
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.ServiceInterface.pdb
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.Text.pdb
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.Text.xml
+C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\obj\Debug\Splash.csprojResolveAssemblyReference.cache
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\obj\Debug\Splash.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\obj\Debug\Splash.pdb

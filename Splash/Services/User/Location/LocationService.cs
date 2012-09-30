@@ -9,10 +9,11 @@ using ServiceStack.FluentValidation;
 
 using LocationModel = Splash.Model.Entities.Location;
 using UserModel = Splash.Model.Entities.User;
+using Splash.Model.Dto;
 
 namespace Splash.Services.User.Location
 {
-    [Route("/User/Location/{UserId}", "GET")]
+    [Route("/User/{UserId}/Location", "GET")]
     public class GetLocations : IReturn<List<LocationModel>>
     {
         public int UserId { get; set; }
@@ -31,7 +32,7 @@ namespace Splash.Services.User.Location
         }
     }
 
-    [Route("/User/Location/{UserId}", "POST")]
+    [Route("/User/{UserId}/Location", "PUT")]
     public class AddLocation : IReturn<LocationModel>
     {
         public int UserId { get; set; }
@@ -55,33 +56,35 @@ namespace Splash.Services.User.Location
 
         public object Get(GetLocations request)
         {
-            this.GetLocationsValidator.ValidateAndThrow(request);
+            //this.GetLocationsValidator.ValidateAndThrow(request);
 
             using (var session = NHibernateHelper.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    var user = session.Get<UserModel>(request.UserId);
+                    var locationsQuery = session.QueryOver<LocationModel>()
+                                       .Where(table => table.User.Id == request.UserId)
+                                       .And(table => table.Timestamp >= (request.MinTimestamp.HasValue ? request.MinTimestamp.Value : 0))
+                                       .And(table => table.Timestamp <= (request.MaxTimestamp.HasValue ? request.MaxTimestamp.Value : DateTime.Now.ToTimestamp()));
 
-                    var locations = user.Locations.Where(location =>
-                        location.Timestamp >= (request.MinTimestamp.HasValue ? request.MinTimestamp.Value : 0) &&
-                        location.Timestamp <= (request.MaxTimestamp.HasValue ? request.MaxTimestamp.Value : DateTime.Now.ToTimestamp()));
+                    var locations = (request.Last.HasValue)
+                        ? locationsQuery.List().TakeLastN(request.Last.Value)
+                        : locationsQuery.List();
 
-                    if (request.Last.HasValue)
-                    {
-                        return locations.TakeLastN(request.Last.Value);
-                    }
-                    else
-                    {
-                        return locations;
-                    }
+                    var locationsDto = new List<LocationDto>();
+
+                    locations.ToList().ForEach(location => locationsDto.Add(new LocationDto(location)));
+
+                    transaction.Commit();
+
+                    return locationsDto;
                 }
             }
         }
 
-        public object Post(AddLocation request)
+        public object Put(AddLocation request)
         {
-            this.AddLocationValidator.ValidateAndThrow(request);
+            //this.AddLocationValidator.ValidateAndThrow(request);
 
             using (var session = NHibernateHelper.OpenSession())
             {
@@ -98,7 +101,7 @@ namespace Splash.Services.User.Location
 
                     transaction.Commit();
 
-                    return location;
+                    return new LocationDto(location);
                 }
             }
         }

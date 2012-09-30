@@ -8,21 +8,22 @@ using Splash.Model.Entities;
 
 using UserModel = Splash.Model.Entities.User;
 using FriendModel = Splash.Model.Entities.Friend;
+using Splash.Model.Dto;
 
 namespace Splash.Services.User.Friend
 {
-    [Route("/User/{UserId}/FriendRequest/{FrienderUserId}", "POST")]
+    [Route("/User/{FriendeeId}/Friend/{FrienderId}/FriendRequest", "POST")]
     public class AcceptFriendRequest : IReturn<FriendModel>
     {
-        public int UserId { get; set; }
-        public int FrienderUserId { get; set; }
+        public int FriendeeId { get; set; }
+        public int FrienderId { get; set; }
     }
 
-    [Route("/User/{UserId}/FriendRequest/{FriendUserId}", "DELETE")]
-    public class RejectFriendRequestRequest
+    [Route("/User/{InvitedFriendId}/Friend/{InitiatorId}/FriendRequest", "DELETE")]
+    public class RejectFriendRequest
     {
-        public int UserId { get; set; }
-        public int FriendUserId { get; set; }
+        public int InvitedFriendId { get; set; }
+        public int InitiatorId { get; set; }
     }
 
     public class FriendRequestService : Service
@@ -34,16 +35,29 @@ namespace Splash.Services.User.Friend
                 using (var transaction = session.BeginTransaction())
                 {
                     var friendQuery = session.QueryOver<FriendModel>()
-                        .Where(table => table.Friender.Id == request.UserId)
-                        .And(table => table.Friendee.Id == request.FriendUserId);
+                        .Where(row => row.Friendee.Id == request.FriendeeId)
+                        .And(row => row.Friender.Id == request.FrienderId);
 
                     var friend = friendQuery.SingleOrDefault<FriendModel>();
 
-                    friend.IsFriendRequestPending = false;
+                    friend.FriendRequestStatus = FriendRequestStatus.Accepted;
 
                     session.Update(friend);
 
-                    return friend;
+                    // Set up the converse friendship
+                    var converseFriend = new FriendModel()
+                    {
+                        Friender = session.Get<UserModel>(request.FriendeeId),
+                        Friendee = session.Get<UserModel>(request.FrienderId),
+                        FriendRequestStatus = FriendRequestStatus.Accepted,
+                        FollowRequestStatus = FollowRequestStatus.Uninitiated,
+                    };
+
+                    session.SaveOrUpdate(converseFriend);
+
+                    transaction.Commit();
+
+                    return new FriendDto(friend);
                 }
             }
         }
@@ -55,12 +69,17 @@ namespace Splash.Services.User.Friend
                 using (var transaction = session.BeginTransaction())
                 {
                     var friendQuery = session.QueryOver<FriendModel>()
-                        .Where(table => table.Friender.Id == request.UserId)
-                        .And(table => table.Friendee.Id == request.FriendUserId);
+                        .Where(row => row.Friendee.Id == request.InvitedFriendId)
+                        .And(row => row.Friender.Id == request.InitiatorId);
 
-                    var friend = friendQuery.SingleOrDefault<FriendModel>();
+                    var friend = friendQuery.SingleOrDefault();
+
+                    var owningUser = session.Get<UserModel>(friend.Friender.Id);
+                    owningUser.Friends.Remove(friend);
 
                     session.Delete(friend);
+
+                    transaction.Commit();
                 }
             }
         }

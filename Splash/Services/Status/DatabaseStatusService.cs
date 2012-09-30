@@ -13,7 +13,7 @@ using UserModel = Splash.Model.Entities.User;
 
 namespace Splash.Services.Splash
 {
-    [Route("/Status/Database")]
+    [Route("/Database/Status")]
     public class DatabaseStatus { }
 
     public class DatabaseStatusService : Service

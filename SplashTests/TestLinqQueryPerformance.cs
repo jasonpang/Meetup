@@ -99,6 +99,8 @@ namespace SplashTests
                         {
                             locationsList = locations;
                         }
+
+                        transaction.Commit();
                     }
                 }
             }
@@ -134,6 +136,8 @@ namespace SplashTests
                         {
                             locationsList = locationsQuery.List();
                         }
+
+                        transaction.Commit();
                     }
                 }
             }
@@ -176,13 +180,15 @@ namespace SplashTests
                         {
                             locationsList = locations;
                         }
+
+                        transaction.Commit();
                     }
                 }
             }
 
             stopwatch.Stop();
 
-            Trace.WriteLine(String.Format("Method 1 took {0} seconds over 100 iterations.", stopwatch.ElapsedMilliseconds / 1000.0));
+            Trace.WriteLine(String.Format("Method 1 took {0} seconds over 5000 iterations.", stopwatch.ElapsedMilliseconds / 1000.0));
             Trace.WriteLine(String.Empty);
             Trace.WriteLine("Results of the last query:");
             Trace.WriteLine(String.Join(Environment.NewLine, locationsList.Select(x => x))); // Print the list of Locations
@@ -217,6 +223,8 @@ namespace SplashTests
                         {
                             locationsList = locationsQuery.List();
                         }
+
+                        transaction.Commit();
                     }
                 }
             }

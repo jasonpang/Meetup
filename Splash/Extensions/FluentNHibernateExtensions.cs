@@ -1,7 +1,9 @@
 ﻿using FluentNHibernate;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Conventions;
+using FluentNHibernate.Conventions.AcceptanceCriteria;
 using FluentNHibernate.Conventions.Helpers;
+using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.Conventions.Instances;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.Mapping.Providers;
@@ -43,7 +45,7 @@ namespace Splash.Extensions
             return !type.IsGenericType && typeof(T).IsAssignableFrom(type);
         }
 
-        public static IConvention[] ForLowercaseSystem(string referenceSuffix, bool toLowercase)
+        public static IConvention[] AllConventions(string referenceSuffix = "", bool toLowercase = true)
         {
             IList<IConvention> lcase =
                 new IConvention[]
@@ -51,8 +53,9 @@ namespace Splash.Extensions
                     Table.Is(x => x.EntityType.Name.ToLowercaseNamingConvention(toLowercase))
                     ,ConventionBuilder.Property.Always(x => x.Column(x.Name.ToLowercaseNamingConvention(toLowercase)))
                     ,ConventionBuilder.Id.Always( x => x.Column(x.Name.ToLowercaseNamingConvention(toLowercase)) )        
-                    , LowercaseForeignKey.EndsWith(referenceSuffix, toLowercase)
-
+                    , LowercaseForeignKey.EndsWith(referenceSuffix, toLowercase),
+                    new ColumnNullabilityConvention(),
+                    DefaultLazy.Never()
                 };
 
             return lcase.ToArray();
@@ -122,6 +125,19 @@ namespace Splash.Extensions
                     property.Name.ToLowercaseNamingConvention(this.toLowercase)
                     :
                     type.Name.ToLowercaseNamingConvention(this.toLowercase)) + suffix;
+            }
+        }
+
+        public class ColumnNullabilityConvention : IPropertyConvention, IPropertyConventionAcceptance
+        {
+            public void Accept(IAcceptanceCriteria<IPropertyInspector> criteria)
+            {
+                criteria.Expect(x => x.Nullable, Is.Not.Set);
+            }
+
+            public void Apply(IPropertyInstance instance)
+            {
+                instance.Not.Nullable();
             }
         }
     }

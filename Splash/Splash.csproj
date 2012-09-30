@@ -28,6 +28,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PrecompileBeforePublish>true</PrecompileBeforePublish>
+    <DeployIisAppPath>Splash</DeployIisAppPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,13 +38,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ExcludeGeneratedDebugSymbol>false</ExcludeGeneratedDebugSymbol>
+    <PrecompileBeforePublish>false</PrecompileBeforePublish>
+    <DeployIisAppPath>Splash</DeployIisAppPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentNHibernate">
       <HintPath>..\packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
@@ -57,37 +64,42 @@
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="ServiceStack, Version=3.9.17.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack, Version=3.9.19.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.3.9.17\lib\net35\ServiceStack.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.3.9.19\lib\net35\ServiceStack.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Common, Version=3.9.14.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Common, Version=3.9.18.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Common.3.9.14\lib\net35\ServiceStack.Common.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Common.3.9.18\lib\net35\ServiceStack.Common.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=3.9.14.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Common.3.9.14\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Common.3.9.18\lib\net35\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite, Version=3.9.14.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.14\lib\ServiceStack.OrmLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ServiceStack.OrmLite.SqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.14\lib\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ServiceStack.Redis, Version=3.9.14.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ServiceStack.Redis.3.9.14\lib\net35\ServiceStack.Redis.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ServiceStack.ServiceInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.3.9.17\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.3.9.19\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\packages\ServiceStack.Text.3.9.14\lib\net35\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -115,6 +127,9 @@
     <Compile Include="Extensions\FluentNHibernateExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Model\Dto\FriendDto.cs" />
+    <Compile Include="Model\Dto\LocationDto.cs" />
+    <Compile Include="Model\Dto\UserDto.cs" />
     <Compile Include="Model\Entities\Friend.cs" />
     <Compile Include="Model\Mappings\FriendMap.cs" />
     <Compile Include="NHibernateHelper.cs" />
@@ -126,33 +141,13 @@
     <Compile Include="Model\Mappings\LocationMap.cs" />
     <Compile Include="Model\Mappings\UserMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Status\DatabaseConstructService.cs" />
+    <Compile Include="Services\Status\DatabasePurgeService.cs" />
     <Compile Include="Services\Status\DatabaseStatusService.cs" />
     <Compile Include="Services\Status\GeneralStatusService.cs" />
-    <Compile Include="Services\User\Follower\AcceptFollowerRequestService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Follower\AddFollowerService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Follower\GetAllFollowersService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Follower\GetAllPendingFollowersService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Follower\GetFollowerService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Follower\GetPendingFollowersService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Follower\RejectFollowerRequestService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Follower\RemoveFollowerService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\User\Friend\FrienderService.cs" />
+    <Compile Include="Services\User\Friend\Follow\FriendFollowRequestService.cs" />
+    <Compile Include="Services\User\Friend\FriendRequestService.cs" />
+    <Compile Include="Services\User\Friend\FriendService.cs" />
     <Compile Include="Services\User\Location\LocationService.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -162,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -190,7 +186,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>56335</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost</IISUrl>
+          <IISUrl>http://localhost:1618</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

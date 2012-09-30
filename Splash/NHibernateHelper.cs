@@ -42,7 +42,9 @@ namespace Splash
                 .Database(MySQLConfiguration.Standard.ConnectionString("Server=localhost; Port=3306; Database=splash; Uid=jasonhpang; Pwd=jasonhpang;"))
                 .Mappings(m => m.FluentMappings
                     .AddFromAssembly(Assembly.GetExecutingAssembly())
-                    .Conventions.Add(FluentNHibernateExtensions.ForLowercaseSystem(String.Empty, true)))
+                    .Conventions.Add(
+                    FluentNHibernateExtensions.AllConventions()
+                    ))
                 .ExposeConfiguration(ReconstructDatabase)
                 .BuildSessionFactory();
         }

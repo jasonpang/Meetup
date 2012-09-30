@@ -8,6 +8,7 @@ using Splash.Model.Entities;
 
 using UserModel = Splash.Model.Entities.User;
 using FriendModel = Splash.Model.Entities.Friend;
+using Splash.Model.Dto;
 
 namespace Splash.Services.User.Friend
 {
@@ -22,8 +23,8 @@ namespace Splash.Services.User.Friend
         public int? FriendeeId { get; set; }
     }
 
-    [Route("/User/{FrienderId}/Friend/{FriendeeId}", "POST")]
-    public class AddFriend : IReturn<FriendModel>
+    [Route("/User/{FrienderId}/Friend/{FriendeeId}/FriendRequest", "PUT")]
+    public class RequestFriend : IReturn<FriendModel>
     {
         public int FrienderId { get; set; }
         public int FriendeeId { get; set; }
@@ -36,7 +37,7 @@ namespace Splash.Services.User.Friend
         public int FriendeeId { get; set; }
     }
 
-    public class FrienderService : Service
+    public class FriendService : Service
     {
         public object Get(GetFriends request)
         {
@@ -48,24 +49,34 @@ namespace Splash.Services.User.Friend
                     {
                         // Only return one Friend
                         var friendQuery = session.QueryOver<FriendModel>()
-                            .Where(table => table.Friender.Id == request.FrienderId)
-                            .And(table => table.Friendee.Id == request.FriendeeId);
+                            .Where(row => row.Friender.Id == request.FrienderId)
+                            .And(row => row.Friendee.Id == request.FriendeeId);
 
-                        return friendQuery.SingleOrDefault<FriendModel>();
+                        transaction.Commit();
+
+                        var friend = friendQuery.SingleOrDefault<FriendModel>();
+
+                        return new FriendDto(friend);
                     }
                     else
                     {
                         // Return all Friends for this user
                         var friendQuery = session.QueryOver<FriendModel>()
-                            .Where(table => table.Friender.Id == request.FrienderId);
+                            .Where(row => row.Friender.Id == request.FrienderId);
 
-                        return friendQuery.List<FriendModel>();
+                        transaction.Commit();
+
+                        var friends = friendQuery.List<FriendModel>();
+
+                        var friendsDto = new List<FriendDto>();
+                        friends.ToList().ForEach(friend => friendsDto.Add(new FriendDto(friend)));
+                        return friendsDto;
                     }
                 }
             }
         }
 
-        public object Post(AddFriend request)
+        public object Put(RequestFriend request)
         {
             using (var session = NHibernateHelper.OpenSession())
             {
@@ -81,7 +92,9 @@ namespace Splash.Services.User.Friend
 
                     session.SaveOrUpdate(friend);
 
-                    return friend;
+                    transaction.Commit();
+
+                    return new FriendDto(friend);
                 }
             }
         }
@@ -93,10 +106,26 @@ namespace Splash.Services.User.Friend
                 using (var transaction = session.BeginTransaction())
                 {
                     var friendQuery = session.QueryOver<FriendModel>()
-                        .Where(table => table.Friender.Id == request.FrienderId)
-                        .And(table => table.Friendee.Id == request.FriendeeId);
+                        .Where(row => row.Friender.Id == request.FrienderId)
+                        .And(row => row.Friendee.Id == request.FriendeeId);
 
-                    session.Delete(friendQuery.SingleOrDefault());
+                    var converseQuery = session.QueryOver<FriendModel>()
+                        .Where(row => row.Friender.Id == request.FriendeeId)
+                        .And(row => row.Friendee.Id == request.FrienderId);
+
+                    var initiatorFriend = friendQuery.SingleOrDefault();
+                    var invitedFriend = converseQuery.SingleOrDefault();
+
+                    var initiatorUser = session.Get<UserModel>(initiatorFriend.Friender.Id);
+                    var invitedUser = session.Get<UserModel>(initiatorFriend.Friendee.Id);
+
+                    initiatorUser.Friends.Remove(initiatorFriend);
+                    invitedUser.Friends.Remove(invitedFriend);
+
+                    session.Delete(initiatorFriend);
+                    session.Delete(invitedFriend);
+
+                    transaction.Commit();
                 }
             }
         }

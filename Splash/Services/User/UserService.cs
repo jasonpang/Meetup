@@ -6,8 +6,10 @@ using System.Linq;
 using System.Web;
 using Splash.Extensions;
 using ServiceStack.FluentValidation;
+using ServiceStack.Common.Utils;
 
 using UserModel = Splash.Model.Entities.User;
+using Splash.Model.Dto;
 
 namespace Splash.Services.User
 {
@@ -17,7 +19,7 @@ namespace Splash.Services.User
         public int Id { get; set; }
     }
 
-    [Route("/User", "POST")]
+    [Route("/User", "PUT")]
     public class CreateUser : IReturn<UserModel>
     {
         public string FirstName { get; set; }
@@ -41,7 +43,7 @@ namespace Splash.Services.User
         }
     }
 
-    [Route("/User/{Id}", "PUT")]
+    [Route("/User/{Id}", "PATCH")]
     public class UpdateUser : IReturn<UserModel>
     {
         public int Id { get; set; }
@@ -85,45 +87,17 @@ namespace Splash.Services.User
                 {
                     var user = session.Get<UserModel>(request.Id);
 
-                    return user;
-                }
-            }
-        }
-
-        public object Post(CreateUser request)
-        {
-            this.CreateUserValidator.ValidateAndThrow(request);
-
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                using (var transaction = session.BeginTransaction())
-                {
-                    var user = new UserModel();
-
-                    if (request.FirstName.IsSet())
-                        user.FirstName = request.FirstName;
-                    if (request.LastName.IsSet())
-                        user.LastName = request.LastName;
-                    if (request.Nickname.IsSet())
-                        user.Nickname = request.Nickname;
-                    if (request.PhoneNumber.IsSet())
-                        user.PhoneNumber = request.PhoneNumber;
-                    if (request.Email.IsSet())
-                        user.Email = request.Email;
-                    if (request.Password.IsSet())
-                        user.Password = request.Password;
-
-                    session.SaveOrUpdate(user);
                     transaction.Commit();
 
-                    return user;
+                    var userDto = new UserDto(user);
+                    return userDto;
                 }
             }
         }
 
-        public object Put(UpdateUser request)
+        public object Patch(UpdateUser request)
         {
-            this.UpdateUserValidator.ValidateAndThrow(request);
+            //this.UpdateUserValidator.ValidateAndThrow(request);
 
             using (var session = NHibernateHelper.OpenSession())
             {
@@ -148,7 +122,40 @@ namespace Splash.Services.User
 
                     transaction.Commit();
 
-                    return user;
+                    return new UserDto(user);
+                }
+            }
+        }
+
+        public object Put(CreateUser request)
+        {
+            //this.CreateUserValidator.ValidateAndThrow(request);
+
+            using (var session = NHibernateHelper.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    var user = new UserModel();
+
+                    user.Created = DateTime.Now.ToTimestamp();
+
+                    if (request.FirstName.IsSet())
+                        user.FirstName = request.FirstName;
+                    if (request.LastName.IsSet())
+                        user.LastName = request.LastName;
+                    if (request.Nickname.IsSet())
+                        user.Nickname = request.Nickname;
+                    if (request.PhoneNumber.IsSet())
+                        user.PhoneNumber = request.PhoneNumber;
+                    if (request.Email.IsSet())
+                        user.Email = request.Email;
+                    if (request.Password.IsSet())
+                        user.Password = request.Password;
+
+                    session.SaveOrUpdate(user);
+                    transaction.Commit();
+
+                    return new UserDto(user);
                 }
             }
         }

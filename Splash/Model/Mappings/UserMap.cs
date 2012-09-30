@@ -25,7 +25,7 @@ namespace Splash.Model.Mappings
             Map(x => x.Email).Not.Nullable();
             Map(x => x.Password).Not.Nullable();
 
-            HasMany(x => x.Locations).KeyColumn("ownerId").Inverse().Cascade.All(); 
+            HasMany(x => x.Locations).KeyColumn("ownerId").Inverse().Cascade.All();
             HasMany(x => x.Friends).KeyColumn("frienderId").Inverse().Cascade.All();
         }
     }

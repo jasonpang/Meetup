@@ -18,8 +18,7 @@ namespace Splash.Services.Splash
     {
         public object Get(GeneralStatus request)
         {
-            //return new HttpError(HttpStatusCode.OK, "All services are functional.");
-            return new ResponseStatus() { Message = "Hi Sam!" };
+            return new HttpError(HttpStatusCode.OK, "All services are functional.");
         }
     }
 }
