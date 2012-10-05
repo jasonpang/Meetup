@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <setParameter name="IIS Web Application Name" value="Splash" />
+  <setParameter name="MySqlConnectionString-Web.config Connection String" value="Server=localhost; Port=3306; Database=splash; Uid=jasonhpang; Pwd=jasonhpang;" />
+</parameters>

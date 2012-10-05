@@ -121,6 +121,11 @@ namespace Splash.Services.Splash
             jason.Locations.Add(sebastiansCollege);
             jason.Locations.Add(geraldsCollege);
 
+            var messageOne = new Message()
+            {
+                 
+            };
+
             using (var session = NHibernateHelper.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())

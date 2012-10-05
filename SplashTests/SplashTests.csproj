@@ -102,6 +102,7 @@
     </Compile>
     <Compile Include="TimeStampTests.cs" />
     <Compile Include="TestApiCalls.cs" />
+    <Compile Include="TestSebastian.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Splash\Splash.csproj">

@@ -16,10 +16,10 @@ namespace Splash.Model.Mappings
             Id(x => x.Id);
 
             References(x => x.User, "ownerId").Cascade.None();
-            Map(x => x.Timestamp).Not.Nullable();
+            Map(x => x.Timestamp);
 
-            Map(x => x.Latitude).Not.Nullable();
-            Map(x => x.Longitude).Not.Nullable();
+            Map(x => x.Latitude);
+            Map(x => x.Longitude);
         }
     }
 }

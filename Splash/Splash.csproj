@@ -129,9 +129,12 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Model\Dto\FriendDto.cs" />
     <Compile Include="Model\Dto\LocationDto.cs" />
+    <Compile Include="Model\Dto\MessageDto.cs" />
     <Compile Include="Model\Dto\UserDto.cs" />
     <Compile Include="Model\Entities\Friend.cs" />
+    <Compile Include="Model\Entities\Message.cs" />
     <Compile Include="Model\Mappings\FriendMap.cs" />
+    <Compile Include="Model\Mappings\MessageMap.cs" />
     <Compile Include="NHibernateHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -151,6 +154,7 @@
     <Compile Include="Services\User\Location\LocationService.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\User\Messages\MessageService.cs" />
     <Compile Include="Services\User\UserService.cs">
       <SubType>Code</SubType>
     </Compile>

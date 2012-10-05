@@ -23,6 +23,6 @@ C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\bin\Debug\ServiceStack.I
 C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\bin\Debug\ServiceStack.ServiceInterface.pdb
 C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\bin\Debug\ServiceStack.Text.pdb
 C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\bin\Debug\ServiceStack.Text.xml
-C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\obj\Debug\SplashTests.csprojResolveAssemblyReference.cache
 C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\obj\Debug\SplashTests.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\obj\Debug\SplashTests.pdb
+C:\Users\Jason\Dropbox\Splash\Server\Splash\SplashTests\obj\Debug\SplashTests.csprojResolveAssemblyReference.cache

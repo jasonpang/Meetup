@@ -2,8 +2,6 @@ C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\Splash.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\Splash.pdb
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\FluentNHibernate.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\Iesi.Collections.dll
-C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\MySql.Data.dll
-C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\MySql.Web.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\NHibernate.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.Common.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.dll
@@ -29,6 +27,8 @@ C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.Redis.xml
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.ServiceInterface.pdb
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.Text.pdb
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\ServiceStack.Text.xml
-C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\obj\Debug\Splash.csprojResolveAssemblyReference.cache
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\obj\Debug\Splash.dll
 C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\obj\Debug\Splash.pdb
+C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\MySql.Data.dll
+C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\bin\MySql.Web.dll
+C:\Users\Jason\Dropbox\Splash\Server\Splash\Splash\obj\Debug\Splash.csprojResolveAssemblyReference.cache

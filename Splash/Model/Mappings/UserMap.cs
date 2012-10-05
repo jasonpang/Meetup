@@ -15,15 +15,15 @@ namespace Splash.Model.Mappings
 
             Id(x => x.Id);
 
-            Map(x => x.Created).Not.Nullable();
-            Map(x => x.LastLoggedIn).Not.Nullable();
+            Map(x => x.Created);
+            Map(x => x.LastLoggedIn);
 
-            Map(x => x.FirstName).Not.Nullable();
-            Map(x => x.LastName).Not.Nullable();
-            Map(x => x.Nickname).Not.Nullable();
-            Map(x => x.PhoneNumber).Not.Nullable();
-            Map(x => x.Email).Not.Nullable();
-            Map(x => x.Password).Not.Nullable();
+            Map(x => x.FirstName);
+            Map(x => x.LastName);
+            Map(x => x.Nickname);
+            Map(x => x.PhoneNumber);
+            Map(x => x.Email);
+            Map(x => x.Password);
 
             HasMany(x => x.Locations).KeyColumn("ownerId").Inverse().Cascade.All();
             HasMany(x => x.Friends).KeyColumn("frienderId").Inverse().Cascade.All();

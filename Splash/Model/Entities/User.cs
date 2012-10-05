@@ -24,6 +24,8 @@ namespace Splash.Model.Entities
 
         public virtual IList<Friend> Friends { get; set; }
 
+        public virtual IList<Message> Messages { get; set; }
+
         public User()
         {
             LastLoggedIn = default(long);
@@ -39,6 +41,8 @@ namespace Splash.Model.Entities
             Locations = new List<Location>();
 
             Friends = new List<Friend>();
+
+            Messages = new List<Message>();
         }
     }
 }
