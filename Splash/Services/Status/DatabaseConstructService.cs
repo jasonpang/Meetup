@@ -50,6 +50,7 @@ namespace Splash.Services.Splash
                 Email = "jasonpang2011@gmail.com",
                 PhoneNumber = "14088329201",
                 Password = "123456",
+                Privileges = Privileges.CanReadWriteOtherUserResources | Privileges.CanInterfaceWithDatabaseDirectly,
             };
 
             var sebastian = new UserModel()
@@ -61,6 +62,7 @@ namespace Splash.Services.Splash
                 Email = "sebastian.liu@gmail.com",
                 PhoneNumber = "14084394728",
                 Password = "123456",
+                Privileges = Privileges.NoRateLimit | Privileges.Standard,
             };
 
             var gerald = new UserModel()
@@ -72,6 +74,7 @@ namespace Splash.Services.Splash
                 Email = "geraldgfong@gmail.com",
                 PhoneNumber = "14085178821",
                 Password = "123456",
+                Privileges = Privileges.CanReadWriteOtherUserResources,
             };
 
             var jasonsCollege = new Location()
@@ -123,8 +126,35 @@ namespace Splash.Services.Splash
 
             var messageOne = new Message()
             {
-                 
+                 Content = "This is a test message.",
+                 MessageType = MessageType.YesNo,
+                 IsRead = false,
+                 NoActionUri = "http://www.google.com",
+                 YesActionUri = "http://www.yahoo.com",
+                 OkActionUri = "http://www.bing.com",
+                 Timestamp = DateTime.Now.ToTimestamp(),
+                 User = jason,
             };
+
+            jason.Messages.Add(messageOne);
+
+            /*
+            jason.Friends.Add(new Friend()
+            {
+                Friender = jason,
+                Friendee = sebastian,
+                FriendRequestStatus = FriendRequestStatus.Pending,
+                FollowRequestStatus = FollowRequestStatus.Uninitiated,
+            });
+
+            jason.Friends.Add(new Friend()
+            {
+                Friender = jason,
+                Friendee = gerald,
+                FriendRequestStatus = FriendRequestStatus.Pending,
+                FollowRequestStatus = FollowRequestStatus.Uninitiated,
+            });
+             */
 
             using (var session = NHibernateHelper.OpenSession())
             {

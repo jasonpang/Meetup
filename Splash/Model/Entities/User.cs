@@ -6,6 +6,31 @@ using Splash.Extensions;
 
 namespace Splash.Model.Entities
 {
+    [Flags]
+    public enum Privileges
+    {
+        /// <summary>
+        /// Can only read from own resources. e.g. GET /User?userId=1, where 1 is the user's id
+        /// </summary>
+        Standard = 1 << 0,
+        /// <summary>
+        /// Can read from other resources, but cannot write. e.g. GET /User?userId=2, where 2 is another user's id
+        /// </summary>
+        CanReadOtherUserResources = 1 << 1,
+        /// <summary>
+        /// Can read and write from and to other resources, includes delete. e.g. DELETE /User?userId=2, where 2 is another user's id
+        /// </summary>
+        CanReadWriteOtherUserResources = 1 << 2,
+        /// <summary>
+        /// Can read and write from the database directly. e.g. DELETE /Database
+        /// </summary>
+        CanInterfaceWithDatabaseDirectly = 1 << 3,
+        /// <summary>
+        /// No API call rate limiting.
+        /// </summary>
+        NoRateLimit = 1 << 4,
+    }
+
     public class User
     {
         public virtual int Id { get; protected set; }
@@ -25,6 +50,8 @@ namespace Splash.Model.Entities
         public virtual IList<Friend> Friends { get; set; }
 
         public virtual IList<Message> Messages { get; set; }
+
+        public virtual Privileges Privileges { get; set; }
 
         public User()
         {

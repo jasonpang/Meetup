@@ -41,7 +41,7 @@ namespace Splash.Model.Dto
             this.Content = message.Content;
             this.IsRead = message.IsRead;
             this.YesActionUri = message.YesActionUri;
-            this.OKActionUri = message.OKActionUri;
+            this.OKActionUri = message.OkActionUri;
             this.NoActionUri = message.NoActionUri;
         }
     }

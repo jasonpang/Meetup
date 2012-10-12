@@ -14,8 +14,8 @@ namespace Splash.Model.Mappings
             Table("friends");
 
             Id(x => x.Id);
-            References(x => x.Friender, "frienderId").Cascade.None();
-            References(x => x.Friendee, "friendeeId").Cascade.None();
+            References(x => x.Friender, "userId").Cascade.None();
+            References(x => x.Friendee, "friendId").Cascade.None();
             Map(x => x.FriendRequestStatus);
             Map(x => x.FollowRequestStatus);
         }

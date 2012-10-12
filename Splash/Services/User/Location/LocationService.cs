@@ -3,36 +3,36 @@ using ServiceStack.ServiceInterface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using Splash.Authentication;
 using Splash.Extensions;
 using ServiceStack.FluentValidation;
-
 using LocationModel = Splash.Model.Entities.Location;
 using UserModel = Splash.Model.Entities.User;
 using Splash.Model.Dto;
 
 namespace Splash.Services.User.Location
 {
-    [Route("/User/{UserId}/Location", "GET")]
+    [Route("/User/Location", "GET")]
     public class GetLocations : IReturn<List<LocationModel>>
     {
         public int UserId { get; set; }
         public long? MinTimestamp { get; set; }
         public long? MaxTimestamp { get; set; }
-        public int? Last { get; set; }
+        public int? Limit { get; set; }
     }
 
     public class GetLocationsValidator : AbstractValidator<GetLocations>
     {
         public GetLocationsValidator()
         {
-            RuleFor(x => x.MinTimestamp).GreaterThan(0).LessThan(DateTime.Now.ToTimestamp());
-            RuleFor(x => x.MaxTimestamp).GreaterThan(0).LessThanOrEqualTo(DateTime.Now.ToTimestamp());
-            RuleFor(x => x.Last).GreaterThan(0);
+            RuleFor(x => x.UserId).EnsureValidId();
+            RuleFor(x => x.MinTimestamp).EnsureValidTimestamp(isMaxTimestamp: false);
+            RuleFor(x => x.MaxTimestamp).EnsureValidTimestamp(isMaxTimestamp: true);
+            RuleFor(x => x.Limit).EnsureValidLimitByNumber();
         }
     }
 
-    [Route("/User/{UserId}/Location", "PUT")]
+    [Route("/User/Location", "PUT")]
     public class AddLocation : IReturn<LocationModel>
     {
         public int UserId { get; set; }
@@ -44,11 +44,13 @@ namespace Splash.Services.User.Location
     {
         public AddLocationValidator()
         {
-            RuleFor(x => x.Latitude).NotEmpty().GreaterThanOrEqualTo(-90).LessThanOrEqualTo(90);
-            RuleFor(x => x.Longitude).NotEmpty().GreaterThanOrEqualTo(-180).LessThanOrEqualTo(180);
+            RuleFor(x => x.UserId).EnsureValidId();
+            RuleFor(x => x.Latitude).EnsureValidGeocoordinate(GeocoordinateType.Latitude);
+            RuleFor(x => x.Longitude).EnsureValidGeocoordinate(GeocoordinateType.Latitude);
         }
     }
 
+    [RequiresAuthentication]
     public class LocationService : Service
     {
         public IValidator<GetLocations> GetLocationsValidator { get; set; }
@@ -56,7 +58,7 @@ namespace Splash.Services.User.Location
 
         public object Get(GetLocations request)
         {
-            //this.GetLocationsValidator.ValidateAndThrow(request);
+            GetLocationsValidator.ValidateAndThrow(request);
 
             using (var session = NHibernateHelper.OpenSession())
             {
@@ -67,8 +69,8 @@ namespace Splash.Services.User.Location
                                        .And(table => table.Timestamp >= (request.MinTimestamp.HasValue ? request.MinTimestamp.Value : 0))
                                        .And(table => table.Timestamp <= (request.MaxTimestamp.HasValue ? request.MaxTimestamp.Value : DateTime.Now.ToTimestamp()));
 
-                    var locations = (request.Last.HasValue)
-                        ? locationsQuery.List().TakeLastN(request.Last.Value)
+                    var locations = (request.Limit.HasValue)
+                        ? locationsQuery.List().TakeLastN(request.Limit.Value)
                         : locationsQuery.List();
 
                     var locationsDto = new List<LocationDto>();
@@ -84,7 +86,7 @@ namespace Splash.Services.User.Location
 
         public object Put(AddLocation request)
         {
-            //this.AddLocationValidator.ValidateAndThrow(request);
+            AddLocationValidator.ValidateAndThrow(request);
 
             using (var session = NHibernateHelper.OpenSession())
             {

@@ -1,22 +1,25 @@
 ﻿using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Splash.Extensions;
 using ServiceStack.FluentValidation;
-using ServiceStack.Common.Utils;
-
 using UserModel = Splash.Model.Entities.User;
 using Splash.Model.Dto;
 
 namespace Splash.Services.User
 {
-    [Route("/User/{Id}", "GET")]
+    [Route("/User", "GET")]
     public class RetrieveUser : IReturn<UserModel>
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
+    }
+
+    public class RetrieveUserValidator : AbstractValidator<RetrieveUser>
+    {
+        public RetrieveUserValidator()
+        {
+            RuleFor(x => x.UserId).EnsureValidId();
+        }
     }
 
     [Route("/User", "PUT")]
@@ -34,19 +37,19 @@ namespace Splash.Services.User
     {
         public CreateUserValidator()
         {
-            RuleFor(x => x.FirstName).NotEmpty().Length(1, 35);
-            RuleFor(x => x.LastName).NotEmpty().Length(1, 35);
-            RuleFor(x => x.Nickname).NotEmpty().Length(1, 25);
-            RuleFor(x => x.PhoneNumber).NotEmpty().Length(1, 12);
-            RuleFor(x => x.Email).NotEmpty().EmailAddress();
-            RuleFor(x => x.Password).NotEmpty().Length(1, 35);
+            RuleFor(x => x.FirstName).EnsureValidName(TypeOfName.First).When(x => x.FirstName != null);
+            RuleFor(x => x.LastName).EnsureValidName(TypeOfName.Last).When(x => x.LastName != null);
+            RuleFor(x => x.Nickname).EnsureValidName(TypeOfName.Nickname).When(x => x.Nickname != null);
+            RuleFor(x => x.PhoneNumber).EnsureValidPhoneNumber();
+            RuleFor(x => x.Email).EnsureValidEmail();
+            RuleFor(x => x.Password).EnsureValidPassword();
         }
     }
 
-    [Route("/User/{Id}", "PATCH")]
+    [Route("/User", "PATCH")]
     public class UpdateUser : IReturn<UserModel>
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Nickname { get; set; }
@@ -59,33 +62,46 @@ namespace Splash.Services.User
     {
         public UpdateUserValidator()
         {
-            RuleFor(x => x.FirstName).SetValidator(new CreateUserValidator());
-            RuleFor(x => x.LastName).SetValidator(new CreateUserValidator());
-            RuleFor(x => x.Nickname).SetValidator(new CreateUserValidator());
-            RuleFor(x => x.PhoneNumber).SetValidator(new CreateUserValidator());
-            RuleFor(x => x.Email).SetValidator(new CreateUserValidator());
-            RuleFor(x => x.Password).SetValidator(new CreateUserValidator());
+            RuleFor(x => x.UserId).EnsureValidId();
+            RuleFor(x => x.FirstName).EnsureValidName(TypeOfName.First).When(x => x.FirstName != null);
+            RuleFor(x => x.LastName).EnsureValidName(TypeOfName.Last).When(x => x.LastName != null);
+            RuleFor(x => x.Nickname).EnsureValidName(TypeOfName.Nickname).When(x => x.Nickname != null);
+            RuleFor(x => x.PhoneNumber).EnsureValidPhoneNumber().When(x => x.PhoneNumber != null);
+            RuleFor(x => x.Email).EnsureValidEmail().When(x => x.Email != null);
+            RuleFor(x => x.Password).EnsureValidPassword().When(x => x.Password != null);
         }
     }
 
-    [Route("/User/{Id}", "DELETE")]
+    [Route("/User/{UserId}", "DELETE")]
     public class DeleteUser
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
+    }
+
+    public class DeleteUserValidator : AbstractValidator<RetrieveUser>
+    {
+        public DeleteUserValidator()
+        {
+            RuleFor(x => x.UserId).EnsureValidId();
+        }
     }
 
     public class UserService : Service
     {
-        public IValidator<CreateUser> CreateUserValidator { get; set; }
+        public IValidator<RetrieveUser> RetrieveUserValidator { get; set; }
         public IValidator<UpdateUser> UpdateUserValidator { get; set; }
+        public IValidator<CreateUser> CreateUserValidator { get; set; }
+        public IValidator<DeleteUser> DeleteUserValidator { get; set; }
 
         public object Get(RetrieveUser request)
         {
+            RetrieveUserValidator.ValidateAndThrow(request);
+
             using (var session = NHibernateHelper.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    var user = session.Get<UserModel>(request.Id);
+                    var user = session.Get<UserModel>(request.UserId);
 
                     transaction.Commit();
 
@@ -97,13 +113,13 @@ namespace Splash.Services.User
 
         public object Patch(UpdateUser request)
         {
-            //this.UpdateUserValidator.ValidateAndThrow(request);
+            UpdateUserValidator.ValidateAndThrow(request);
 
             using (var session = NHibernateHelper.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    var user = session.Get<UserModel>(request.Id);
+                    var user = session.Get<UserModel>(request.UserId);
 
                     if (request.FirstName.IsSet())
                         user.FirstName = request.FirstName;
@@ -129,7 +145,7 @@ namespace Splash.Services.User
 
         public object Put(CreateUser request)
         {
-            //this.CreateUserValidator.ValidateAndThrow(request);
+            CreateUserValidator.ValidateAndThrow(request);
 
             using (var session = NHibernateHelper.OpenSession())
             {
@@ -162,11 +178,13 @@ namespace Splash.Services.User
 
         public void Delete(DeleteUser request)
         {
+            DeleteUserValidator.ValidateAndThrow(request);
+
             using (var session = NHibernateHelper.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    var user = session.Get<UserModel>(request.Id);
+                    var user = session.Get<UserModel>(request.UserId);
 
                     session.Delete(user);
 

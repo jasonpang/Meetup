@@ -28,7 +28,7 @@ namespace Splash.Model.Entities
         public virtual String Content { get; set; }
         public virtual bool IsRead { get; set; }
         public virtual String YesActionUri { get; set; }
-        public virtual String OKActionUri { get; set; }
+        public virtual String OkActionUri { get; set; }
         public virtual String NoActionUri { get; set; }
 
         public Message()
@@ -39,7 +39,7 @@ namespace Splash.Model.Entities
             Content = String.Empty;
             IsRead = default(bool);
             YesActionUri = String.Empty;
-            OKActionUri = String.Empty;
+            OkActionUri = String.Empty;
             NoActionUri = String.Empty;
         }
     }

@@ -21,7 +21,7 @@ namespace SplashTests
         [TestMethod]
         public void TestRetrieveUser()
         {
-            var user = client.Get(new RetrieveUser() { Id = 1 });
+            var user = client.Get(new RetrieveUser() { UserId = 1 });
 
             var jason = new User()
             {

@@ -21,7 +21,7 @@ namespace Splash.Model.Mappings
             Map(x => x.Content);
             Map(x => x.IsRead);
             Map(x => x.YesActionUri);
-            Map(x => x.OKActionUri);
+            Map(x => x.OkActionUri);
             Map(x => x.NoActionUri);
         }
     }
