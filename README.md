@@ -5,7 +5,7 @@ Description
 -------
 Splash is a location-tracking smartphone app to simplify meetups and stay connected between friends.
 
-This is the code for the backend RESTful API web service.
+This is the code for the backend RESTful API web service. Below are images from the mobile app.
 
 Screenshots
 ----------
